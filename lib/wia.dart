@@ -56,6 +56,10 @@ class Wia {
     }
   }
 
+  void logout() async {
+    _accessToken = null;
+  }
+
   Future<User> retrieveUserMe() async {
     var response =
         await http.get(_baseUri + "/users/me", headers: getClientHeaders());
@@ -70,14 +74,61 @@ class Wia {
     }
   }
 
-  Future<List<Space>> listSpaces() async {
-    var response =
-        await http.get(_baseUri + "/spaces", headers: getClientHeaders());
+  Future<List<Space>> listSpaces({int limit = 40, int page = 1}) async {
+    var queryString = "limit=" + limit.toString() + "&page=" + page.toString();
+
+    var response = await http.get(_baseUri + "/spaces?" + queryString,
+        headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
       List<dynamic> spacesData = jsonResponse["spaces"];
       return spacesData.map((spaceJson) => Space.fromJson(spaceJson)).toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Space> retrieveSpace(String id) async {
+    var response =
+        await http.get(_baseUri + "/spaces/" + id, headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var space = Space.fromJson(jsonResponse);
+      return space;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Device>> listDevices(String spaceId,
+      {int limit = 40, int page = 1}) async {
+    var response = await http.get(_baseUri + "/devices?space.id=" + spaceId,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      List<dynamic> devicesData = jsonResponse["devices"];
+      return devicesData
+          .map((deviceJson) => Device.fromJson(deviceJson))
+          .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Device> retrieveDevice(String id) async {
+    var response = await http.get(_baseUri + "/devices/" + id,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var device = Device.fromJson(jsonResponse);
+      return device;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);

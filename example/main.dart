@@ -15,10 +15,11 @@ void main() async {
     print(userRequest.id);
 
     List<Space> listSpacesRequest = await wia.listSpaces();
-    print(listSpacesRequest);
+    // print(listSpacesRequest);
     listSpacesRequest.forEach((space) {
-      print(space.name);
+      // print(space.name);
     });
+    print("DONE!");
   } catch (err) {
     print(err);
   }
