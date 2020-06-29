@@ -44,7 +44,22 @@ class Wia {
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       var accessToken = AccessToken.fromJson(jsonResponse);
+      _accessToken = accessToken.token;
       return accessToken;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<User> retrieveUserMe() async {
+    var response =
+        await http.get(_baseUri + "/users/me", headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var user = User.fromJson(jsonResponse);
+      return user;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);

@@ -10,6 +10,9 @@ void main() async {
   try {
     AccessToken accessTokenRequest = await wia.login("test@wia.io", 'password');
     print("GOT ACCESS TOKEN!!!");
+
+    User userRequest = await wia.retrieveUserMe();
+    print(userRequest.id);
   } catch (err) {
     print(err);
   }
