@@ -2,7 +2,7 @@
  * This file contains classes used in this library.
  */
 class User {
-  String id;
+  int id;
   String firstName, lastName;
 
   // default constructor
@@ -16,13 +16,8 @@ class User {
 
 class Device {
   String id;
-  String name
+  String name;
 
   // default constructor
   Device(this.id, this.name);
-
-  // instance method
-  String getFullName() {
-    return '${this.firstName} ${this.lastName}';
-  }
 }

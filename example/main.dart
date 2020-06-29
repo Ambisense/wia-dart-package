@@ -1,12 +1,13 @@
-import 'package:sample_remote_data/sample_remote_data.dart';
+import 'package:wia_dart_package/wia.dart';
 
 void main() async {
+  var appKey = "your_wia_app_key";
+  var accessToken = "your_wia_access_token";
+
+  Wia wia = new Wia(appKey, accessToken: accessToken);
 
   // User class is exported from `main.dart` file
-  Iterable<User> users = await getUsers();
+  AccessToken accessTokenRequest = await wia.login("testdd@wia.io", 'password');
 
-  // for each item in users, print full name
-  users.forEach( ( user ) {
-    print( "User ${ user.id } is ${ user.getFullName() }" );
-  } );
+  print("User ${accessTokenRequest.token} ");
 }
