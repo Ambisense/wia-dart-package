@@ -1,13 +1,17 @@
-class AccessToken {
-  String token;
+class Device {
+  String id;
+
+  String name;
 
   // default constructor
-  AccessToken();
+  Device();
 
-  AccessToken.fromJson(Map<String, dynamic> json) : token = json['token']; //,
-  // email = json['email'];
+  Device.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'];
 
   Map<String, dynamic> toJson() => {
-        'token': token,
+        'id': id,
+        'name': name,
       };
 }

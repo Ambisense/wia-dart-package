@@ -7,11 +7,15 @@ import 'package:http/http.dart' as http;
 import './src/resources/access_token.dart';
 import './src/resources/user.dart';
 import './src/resources/exceptions.dart';
+import './src/resources/device.dart';
+import './src/resources/space.dart';
 
 // export classes to the public
 export './src/resources/access_token.dart';
 export './src/resources/user.dart';
 export './src/resources/exceptions.dart';
+export './src/resources/device.dart';
+export './src/resources/space.dart';
 
 class Wia {
   final _baseUri = "https://api.wia.io/v1";
@@ -60,6 +64,20 @@ class Wia {
       var jsonResponse = convert.jsonDecode(response.body);
       var user = User.fromJson(jsonResponse);
       return user;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Space>> listSpaces() async {
+    var response =
+        await http.get(_baseUri + "/spaces", headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      List<dynamic> spacesData = jsonResponse["spaces"];
+      return spacesData.map((spaceJson) => Space.fromJson(spaceJson)).toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
