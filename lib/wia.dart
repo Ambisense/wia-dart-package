@@ -74,14 +74,15 @@ class Wia {
     }
   }
 
-  Future<List<Space>> listSpaces({int limit = 40, int page = 1}) async {
-    var queryString = "limit=" + limit.toString() + "&page=" + page.toString();
+  Future<List<Space>> listSpaces({int limit = 80}) async {
+    var queryString = "limit=" + limit.toString();
 
     var response = await http.get(_baseUri + "/spaces?" + queryString,
         headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      print(jsonResponse);
       List<dynamic> spacesData = jsonResponse["spaces"];
       return spacesData.map((spaceJson) => Space.fromJson(spaceJson)).toList();
     } else {

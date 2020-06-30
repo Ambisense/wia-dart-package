@@ -8,7 +8,8 @@ void main() async {
 
   // User class is exported from `main.dart` file
   try {
-    AccessToken accessTokenRequest = await wia.login("username", "password");
+    AccessToken accessTokenRequest =
+        await wia.login("test@wia.io", "deZ9vPn9YcTqLDd2");
     print("GOT ACCESS TOKEN!!!");
 
     User userRequest = await wia.retrieveUserMe();
