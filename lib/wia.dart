@@ -9,6 +9,8 @@ import './src/resources/user.dart';
 import './src/resources/exceptions.dart';
 import './src/resources/device.dart';
 import './src/resources/space.dart';
+import './src/resources/organisation.dart';
+import './src/resources/avatar.dart';
 
 // export classes to the public
 export './src/resources/access_token.dart';
@@ -16,6 +18,8 @@ export './src/resources/user.dart';
 export './src/resources/exceptions.dart';
 export './src/resources/device.dart';
 export './src/resources/space.dart';
+export './src/resources/organisation.dart';
+export './src/resources/avatar.dart';
 
 class Wia {
   final _baseUri = "https://api.wia.io/v1";
@@ -130,6 +134,25 @@ class Wia {
       var jsonResponse = convert.jsonDecode(response.body);
       var device = Device.fromJson(jsonResponse);
       return device;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Organisation>> listOrganisations({int limit = 80}) async {
+    var queryString = "limit=" + limit.toString();
+
+    var response = await http.get(_baseUri + "/organisations?" + queryString,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      print(jsonResponse);
+      List<dynamic> organisationsData = jsonResponse["organisations"];
+      return organisationsData
+          .map((organisationJson) => Organisation.fromJson(organisationJson))
+          .toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);

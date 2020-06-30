@@ -18,8 +18,20 @@ void main() async {
     List<Space> listSpacesRequest = await wia.listSpaces();
     // print(listSpacesRequest);
     listSpacesRequest.forEach((space) {
-      // print(space.name);
+      print(space.name);
+      print(space.owner.user);
+      print(space.owner.organisation);
+      print(space.avatar);
+      print(space.avatar.url);
     });
+
+    List<Organisation> listOrganisationsRequest = await wia.listOrganisations();
+    // print(listSpacesRequest);
+    listOrganisationsRequest.forEach((org) {
+      print(org.id);
+      print(org.name);
+    });
+
     print("DONE!");
   } catch (err) {
     print(err);
