@@ -40,7 +40,7 @@ class Device {
             : null,
         events = json['events'] != null
             ? json['events']
-                .map((eventJson) => Event.fromJson(eventJson))
+                .map<Event>((eventJson) => Event.fromJson(eventJson))
                 .toList()
             : null,
         state = json['state'],

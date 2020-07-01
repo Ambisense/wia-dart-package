@@ -186,7 +186,7 @@ class Wia {
 
   Future<List<Event>> listEvents(
       {String deviceId = null, String name = null}) async {
-    var queryString = "?deviceId=" + deviceId;
+    var queryString = "?device.id=" + deviceId;
 
     if (name != null) {
       queryString += "&name=" + name;

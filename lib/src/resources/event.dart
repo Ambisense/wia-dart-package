@@ -16,7 +16,10 @@ class Event {
       : id = json['id'],
         name = json['name'],
         data = json['data'],
-        timestamp = json['timestamp'],
+        timestamp = json['timestamp'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'],
+                isUtc: true)
+            : null,
         timestampRaw = json['timestampRaw'];
 
   Map<String, dynamic> toJson() => {

@@ -19,8 +19,8 @@ class DeviceWidget {
   DeviceWidget.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        type = json['type'],
-        config = json['config'],
+        type = json['type'] != null ? DeviceWidgetType.fromJson(json['type']) : null,
+        config = json['config'] != null ? DeviceWidgetConfig.fromJson(json['config']) : null,
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
                 isUtc: true)
@@ -41,7 +41,7 @@ class DeviceWidget {
 }
 
 class DeviceWidgetType {
-  String id;
+  int id;
 
   String name;
 
@@ -83,7 +83,7 @@ class DeviceWidgetConfig {
 
   String aggregateFunction;
 
-  List<Event> lineChartEvents;
+  List<String> lineChartEvents;
 
   // default constructor
   DeviceWidgetConfig();
@@ -98,7 +98,11 @@ class DeviceWidgetConfig {
         staticImage = json['staticImage'],
         timePeriod = json['timePeriod'],
         aggregateFunction = json['aggregateFunction'],
-        lineChartEvents = json['lineChartEvents'];
+        lineChartEvents = json['lineChartEvents'] != null
+            ? json['lineChartEvents']
+                .map<String>((event) => event as String)
+                .toList()
+            : null;
 
   Map<String, dynamic> toJson() => {
         'dataType': dataType,
