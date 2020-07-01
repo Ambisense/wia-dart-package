@@ -1,5 +1,5 @@
 class DeviceType {
-  String id;
+  int id;
 
   String manufacturer;
 
@@ -16,7 +16,7 @@ class DeviceType {
         manufacturer = json['manufacturer'],
         model = json['model'],
         slug = json['slug'],
-        modelSlug = json['modelSlug'],
+        modelSlug = json['modelSlug'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
