@@ -1,29 +1,26 @@
 import 'dart:async';
 import 'dart:convert' as convert;
-import 'dart:io';
+
 import 'package:http/http.dart' as http;
 
-// import local files
 import './src/resources/access_token.dart';
-import './src/resources/user.dart';
-import './src/resources/exceptions.dart';
 import './src/resources/device.dart';
-import './src/resources/space.dart';
-import './src/resources/organisation.dart';
-import './src/resources/avatar.dart';
-import 'src/resources/device_widget.dart';
 import './src/resources/event.dart';
+import './src/resources/exceptions.dart';
+import './src/resources/organisation.dart';
+import './src/resources/space.dart';
+import './src/resources/user.dart';
+import 'src/resources/device_widget.dart';
 
-// export classes to the public
 export './src/resources/access_token.dart';
-export './src/resources/user.dart';
-export './src/resources/exceptions.dart';
-export './src/resources/device.dart';
-export './src/resources/space.dart';
-export './src/resources/organisation.dart';
 export './src/resources/avatar.dart';
-export 'src/resources/device_widget.dart';
+export './src/resources/device.dart';
 export './src/resources/event.dart';
+export './src/resources/exceptions.dart';
+export './src/resources/organisation.dart';
+export './src/resources/space.dart';
+export './src/resources/user.dart';
+export 'src/resources/device_widget.dart';
 
 class Wia {
   final _baseUri = "https://api.wia.io/v1";
@@ -197,9 +194,34 @@ class Wia {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
-      print(jsonResponse);
+
       List<dynamic> eventsData = jsonResponse["events"];
       return eventsData.map((eventJson) => Event.fromJson(eventJson)).toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Event>> queryEvents(
+    String deviceId, String name, int since, {int until, String aggregateFunction, String resolution,  String sort, int limit = 40, int page}
+  ) async {
+    var queryString = "?device.id=$deviceId&name=$name&since=$since";
+    
+    if (until != null) queryString += "&until=$until";
+    if (aggregateFunction != null) queryString += "&aggregateFunction=$aggregateFunction";
+    if (resolution != null) queryString += "&resolution=$resolution";
+    if (limit != null) queryString += "&limit=$limit";
+    if (page != null) queryString += "&page=$page";
+    
+    var response = await http.get(_baseUri + "/events" + queryString,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+
+      List<dynamic> eventsData = jsonResponse["events"];
+      return eventsData != null ? eventsData.map((eventJson) => Event.fromJson(eventJson)).toList() : [];
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
