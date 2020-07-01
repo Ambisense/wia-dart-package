@@ -11,7 +11,7 @@ import './src/resources/device.dart';
 import './src/resources/space.dart';
 import './src/resources/organisation.dart';
 import './src/resources/avatar.dart';
-import './src/resources/widget.dart';
+import 'src/resources/device_widget.dart';
 import './src/resources/event.dart';
 
 // export classes to the public
@@ -22,7 +22,7 @@ export './src/resources/device.dart';
 export './src/resources/space.dart';
 export './src/resources/organisation.dart';
 export './src/resources/avatar.dart';
-export './src/resources/widget.dart';
+export 'src/resources/device_widget.dart';
 export './src/resources/event.dart';
 
 class Wia {
@@ -165,8 +165,7 @@ class Wia {
     }
   }
 
-  Future<List<Widget>> listWidgets(
-      {String deviceId = null, String spaceId = null}) async {
+  Future<List<DeviceWidget>> listDeviceWidgets(String deviceId) async {
     var queryString = "device.id=" + deviceId.toString();
 
     var response = await http.get(_baseUri + "/widgets?" + queryString,
@@ -177,7 +176,7 @@ class Wia {
       print(jsonResponse);
       List<dynamic> widgetsData = jsonResponse["widgets"];
       return widgetsData
-          .map((widgetJson) => Widget.fromJson(widgetJson))
+          .map((widgetJson) => DeviceWidget.fromJson(widgetJson))
           .toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);

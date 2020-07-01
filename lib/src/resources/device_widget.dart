@@ -1,22 +1,22 @@
-import './event.dart';
+import 'event.dart';
 
-class Widget {
+class DeviceWidget {
   String id;
 
   String name;
 
-  WidgetType type;
+  DeviceWidgetType type;
 
-  WidgetConfig config;
+  DeviceWidgetConfig config;
 
   DateTime createdAt;
 
   DateTime updatedAt;
 
   // default constructor
-  Widget();
+  DeviceWidget();
 
-  Widget.fromJson(Map<String, dynamic> json)
+  DeviceWidget.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         type = json['type'],
@@ -40,15 +40,15 @@ class Widget {
       };
 }
 
-class WidgetType {
+class DeviceWidgetType {
   String id;
 
   String name;
 
   // default constructor
-  WidgetType();
+  DeviceWidgetType();
 
-  WidgetType.fromJson(Map<String, dynamic> json)
+  DeviceWidgetType.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'];
 
@@ -58,7 +58,7 @@ class WidgetType {
       };
 }
 
-class WidgetConfig {
+class DeviceWidgetConfig {
   // All
   String dataType;
 
@@ -86,9 +86,9 @@ class WidgetConfig {
   List<Event> lineChartEvents;
 
   // default constructor
-  WidgetConfig();
+  DeviceWidgetConfig();
 
-  WidgetConfig.fromJson(Map<String, dynamic> json)
+  DeviceWidgetConfig.fromJson(Map<String, dynamic> json)
       : dataType = json['dataType'],
         order = json['order'],
         eventName = json['eventName'],
