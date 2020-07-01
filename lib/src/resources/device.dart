@@ -1,3 +1,4 @@
+import './device_type.dart';
 import './event.dart';
 import './location.dart';
 import './product.dart';
@@ -30,6 +31,8 @@ class Device {
         serialNumber = json['serialNumber'],
         product =
             json['product'] != null ? Product.fromJson(json['product']) : null,
+        type =
+            json['type'] != null ? DeviceType.fromJson(json['type']) : null,
         location = json['location'] != null
             ? Location.fromJson(json['location'])
             : null,
