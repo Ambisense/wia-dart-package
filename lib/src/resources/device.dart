@@ -12,6 +12,8 @@ class Device {
 
   Product product;
 
+  DeviceType deviceType;
+
   Location location;
 
   List<Event> events;
@@ -31,7 +33,7 @@ class Device {
         serialNumber = json['serialNumber'],
         product =
             json['product'] != null ? Product.fromJson(json['product']) : null,
-        type =
+        deviceType =
             json['type'] != null ? DeviceType.fromJson(json['type']) : null,
         location = json['location'] != null
             ? Location.fromJson(json['location'])
@@ -56,6 +58,7 @@ class Device {
         'name': name,
         'serialNumber': serialNumber,
         'product': product,
+        'type': deviceType,
         'location': location,
         'events': events,
         'state': state,
