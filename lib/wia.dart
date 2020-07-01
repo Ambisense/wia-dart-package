@@ -11,6 +11,8 @@ import './src/resources/device.dart';
 import './src/resources/space.dart';
 import './src/resources/organisation.dart';
 import './src/resources/avatar.dart';
+import './src/resources/widget.dart';
+import './src/resources/event.dart';
 
 // export classes to the public
 export './src/resources/access_token.dart';
@@ -20,19 +22,24 @@ export './src/resources/device.dart';
 export './src/resources/space.dart';
 export './src/resources/organisation.dart';
 export './src/resources/avatar.dart';
+export './src/resources/widget.dart';
+export './src/resources/event.dart';
 
 class Wia {
   final _baseUri = "https://api.wia.io/v1";
   String _clientKey = null;
   String _accessToken = null;
 
-  Wia(String clientKey, {String accessToken = null}) {
+  Wia({String clientKey = null, String accessToken = null}) {
     _clientKey = clientKey;
     _accessToken = accessToken;
   }
 
   Map<String, String> getClientHeaders() {
     var map = {'x-client-key': _clientKey};
+    if (_clientKey != null) {
+      map['x-client-key'] = _clientKey;
+    }
     if (_accessToken != null) {
       map['Authorization'] = 'Bearer ' + _accessToken;
     }
@@ -86,7 +93,6 @@ class Wia {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
-      print(jsonResponse);
       List<dynamic> spacesData = jsonResponse["spaces"];
       return spacesData.map((spaceJson) => Space.fromJson(spaceJson)).toList();
     } else {
@@ -109,8 +115,8 @@ class Wia {
     }
   }
 
-  Future<List<Device>> listDevices(String spaceId,
-      {int limit = 40, int page = 1}) async {
+  Future<List<Device>> listDevices(
+      {String spaceId, int limit = 40, int page = 1}) async {
     var response = await http.get(_baseUri + "/devices?space.id=" + spaceId,
         headers: getClientHeaders());
 
@@ -153,6 +159,48 @@ class Wia {
       return organisationsData
           .map((organisationJson) => Organisation.fromJson(organisationJson))
           .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Widget>> listWidgets(
+      {String deviceId = null, String spaceId = null}) async {
+    var queryString = "device.id=" + deviceId.toString();
+
+    var response = await http.get(_baseUri + "/widgets?" + queryString,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      print(jsonResponse);
+      List<dynamic> widgetsData = jsonResponse["widgets"];
+      return widgetsData
+          .map((widgetJson) => Widget.fromJson(widgetJson))
+          .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Event>> listEvents(
+      {String deviceId = null, String name = null}) async {
+    var queryString = "?deviceId=" + deviceId;
+
+    if (name != null) {
+      queryString += "&name=" + name;
+    }
+
+    var response = await http.get(_baseUri + "/events" + queryString,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      print(jsonResponse);
+      List<dynamic> eventsData = jsonResponse["events"];
+      return eventsData.map((eventJson) => Event.fromJson(eventJson)).toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
