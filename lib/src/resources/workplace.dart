@@ -44,6 +44,18 @@ class Workplace {
             ? DateTime.fromMillisecondsSinceEpoch(json['updatedAt'],
                 isUtc: true)
             : null;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'type': type,
+        'meta': meta,
+        'config': config,
+        'devices': devices,
+        'parentWorkplace': parentWorkplace,
+        'createdAt': createdAt,
+        'updatedAt': updatedAt,
+      };
 }
 
 class WorkplaceMeta {
@@ -55,12 +67,18 @@ class WorkplaceMeta {
                 .map<Device>((pointsJson) => Vector3.fromJson(pointsJson))
                 .toList()
             : null;
+
+  Map<String, dynamic> toJson() => {
+        'points': points,
+      };
 }
 
 class WorkplaceConfig {
   WorkplaceConfig();
 
   WorkplaceConfig.fromJson(Map<String, dynamic> json);
+
+  Map<String, dynamic> toJson() => {};
 }
 
 class Vector3 {
@@ -76,4 +94,10 @@ class Vector3 {
       : x = json['x'],
         y = json['y'],
         z = json['z'];
+
+  Map<String, dynamic> toJson() => {
+        'x': x,
+        'y': y,
+        'z': z,
+      };
 }
