@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
+import 'package:wia_dart_package/src/resources/workplace.dart';
 
 import './src/resources/access_token.dart';
 import './src/resources/device.dart';
@@ -203,17 +204,22 @@ class Wia {
     }
   }
 
-  Future<List<Event>> queryEvents(
-    String deviceId, String name, int since, {int until, String aggregateFunction, String resolution,  String sort, int limit = 40, int page}
-  ) async {
+  Future<List<Event>> queryEvents(String deviceId, String name, int since,
+      {int until,
+      String aggregateFunction,
+      String resolution,
+      String sort,
+      int limit = 40,
+      int page}) async {
     var queryString = "?device.id=$deviceId&name=$name&since=$since";
-    
+
     if (until != null) queryString += "&until=$until";
-    if (aggregateFunction != null) queryString += "&aggregateFunction=$aggregateFunction";
+    if (aggregateFunction != null)
+      queryString += "&aggregateFunction=$aggregateFunction";
     if (resolution != null) queryString += "&resolution=$resolution";
     if (limit != null) queryString += "&limit=$limit";
     if (page != null) queryString += "&page=$page";
-    
+
     var response = await http.get(_baseUri + "/events" + queryString,
         headers: getClientHeaders());
 
@@ -221,7 +227,40 @@ class Wia {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
 
       List<dynamic> eventsData = jsonResponse["events"];
-      return eventsData != null ? eventsData.map((eventJson) => Event.fromJson(eventJson)).toList() : [];
+      return eventsData != null
+          ? eventsData.map((eventJson) => Event.fromJson(eventJson)).toList()
+          : [];
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Workplace>> listWorkplaces(
+      {String spaceId, int limit = 40, int page = 1}) async {
+    var response = await http.get(_baseUri + "/workplaces?space.id=" + spaceId,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      List<dynamic> workplacesData = jsonResponse["workplaces"];
+      return workplacesData
+          .map((workplaceJson) => Workplace.fromJson(workplaceJson))
+          .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Workplace> retrieveWorkplace(String id) async {
+    var response = await http.get(_baseUri + "/workplaces/" + id,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var workplace = Workplace.fromJson(jsonResponse);
+      return workplace;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
