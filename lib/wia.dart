@@ -2,27 +2,29 @@ import 'dart:async';
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
-import 'package:wia_dart_package/src/resources/kiosk.dart';
-import 'package:wia_dart_package/src/resources/workplace.dart';
 
 import './src/resources/access_token.dart';
 import './src/resources/device.dart';
+import './src/resources/device_widget.dart';
 import './src/resources/event.dart';
 import './src/resources/exceptions.dart';
+import './src/resources/kiosk.dart';
 import './src/resources/organisation.dart';
 import './src/resources/space.dart';
 import './src/resources/user.dart';
-import 'src/resources/device_widget.dart';
+import './src/resources/workplace.dart';
 
 export './src/resources/access_token.dart';
 export './src/resources/avatar.dart';
 export './src/resources/device.dart';
+export './src/resources/device_widget.dart';
 export './src/resources/event.dart';
 export './src/resources/exceptions.dart';
+export './src/resources/kiosk.dart';
 export './src/resources/organisation.dart';
 export './src/resources/space.dart';
 export './src/resources/user.dart';
-export 'src/resources/device_widget.dart';
+export './src/resources/workplace.dart';
 
 class Wia {
   final _baseUri = "https://api.wia.io/v1";
@@ -268,17 +270,15 @@ class Wia {
     }
   }
 
-  Future<List<Kiosk>> listKiosks(
-      {String organisationId, int limit = 40, int page = 1}) async {
-    var response = await http.get(_baseUri + "/kiosks?organisation.id=" + organisationId,
+  Future<List<Kiosk>> listKiosks(String spaceId,
+      {int limit = 40, int page = 1}) async {
+    var response = await http.get(_baseUri + "/kiosks?space.id=" + spaceId,
         headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
       List<dynamic> kiosksData = jsonResponse["kiosks"];
-      return kiosksData
-          .map((kioskJson) => Kiosk.fromJson(kioskJson))
-          .toList();
+      return kiosksData.map((kioskJson) => Kiosk.fromJson(kioskJson)).toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
@@ -286,8 +286,8 @@ class Wia {
   }
 
   Future<Kiosk> retrieveKiosk(String id) async {
-    var response = await http.get(_baseUri + "/kiosks/" + id,
-        headers: getClientHeaders());
+    var response =
+        await http.get(_baseUri + "/kiosks/" + id, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
