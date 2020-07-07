@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
+import 'package:wia_dart_package/src/resources/kiosk.dart';
 import 'package:wia_dart_package/src/resources/workplace.dart';
 
 import './src/resources/access_token.dart';
@@ -261,6 +262,37 @@ class Wia {
       var jsonResponse = convert.jsonDecode(response.body);
       var workplace = Workplace.fromJson(jsonResponse);
       return workplace;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Kiosk>> listKiosks(
+      {String organisationId, int limit = 40, int page = 1}) async {
+    var response = await http.get(_baseUri + "/kiosks?organisation.id=" + organisationId,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      List<dynamic> kiosksData = jsonResponse["kiosks"];
+      return kiosksData
+          .map((kioskJson) => Kiosk.fromJson(kioskJson))
+          .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Kiosk> retrieveKiosk(String id) async {
+    var response = await http.get(_baseUri + "/kiosks/" + id,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var kiosk = Kiosk.fromJson(jsonResponse);
+      return kiosk;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
