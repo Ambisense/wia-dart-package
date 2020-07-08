@@ -5,24 +5,24 @@ import 'package:http/http.dart' as http;
 
 import './src/resources/access_token.dart';
 import './src/resources/device.dart';
-import './src/resources/device_widget.dart';
 import './src/resources/event.dart';
 import './src/resources/exceptions.dart';
 import './src/resources/kiosk.dart';
 import './src/resources/organisation.dart';
 import './src/resources/space.dart';
+import './src/resources/ui_widget.dart';
 import './src/resources/user.dart';
 import './src/resources/workplace.dart';
 
 export './src/resources/access_token.dart';
 export './src/resources/avatar.dart';
 export './src/resources/device.dart';
-export './src/resources/device_widget.dart';
 export './src/resources/event.dart';
 export './src/resources/exceptions.dart';
 export './src/resources/kiosk.dart';
 export './src/resources/organisation.dart';
 export './src/resources/space.dart';
+export './src/resources/ui_widget.dart';
 export './src/resources/user.dart';
 export './src/resources/workplace.dart';
 
@@ -166,7 +166,7 @@ class Wia {
     }
   }
 
-  Future<List<DeviceWidget>> listDeviceWidgets(String deviceId) async {
+  Future<List<UIWidget>> listDeviceWidgets(String deviceId) async {
     var queryString = "device.id=" + deviceId.toString();
 
     var response = await http.get(_baseUri + "/widgets?" + queryString,
@@ -177,7 +177,7 @@ class Wia {
       print(jsonResponse);
       List<dynamic> widgetsData = jsonResponse["widgets"];
       return widgetsData
-          .map((widgetJson) => DeviceWidget.fromJson(widgetJson))
+          .map((widgetJson) => UIWidget.fromJson(widgetJson))
           .toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
