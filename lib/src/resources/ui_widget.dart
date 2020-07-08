@@ -1,26 +1,24 @@
-import 'event.dart';
-
-class DeviceWidget {
+class UIWidget {
   String id;
 
   String name;
 
-  DeviceWidgetType type;
+  UIWidgetType type;
 
-  DeviceWidgetConfig config;
+  UIWidgetConfig config;
 
   DateTime createdAt;
 
   DateTime updatedAt;
 
   // default constructor
-  DeviceWidget();
+  UIWidget();
 
-  DeviceWidget.fromJson(Map<String, dynamic> json)
+  UIWidget.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        type = json['type'] != null ? DeviceWidgetType.fromJson(json['type']) : null,
-        config = json['config'] != null ? DeviceWidgetConfig.fromJson(json['config']) : null,
+        type = json['type'] != null ? UIWidgetType.fromJson(json['type']) : null,
+        config = json['config'] != null ? UIWidgetConfig.fromJson(json['config']) : null,
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
                 isUtc: true)
@@ -40,15 +38,15 @@ class DeviceWidget {
       };
 }
 
-class DeviceWidgetType {
+class UIWidgetType {
   int id;
 
   String name;
 
   // default constructor
-  DeviceWidgetType();
+  UIWidgetType();
 
-  DeviceWidgetType.fromJson(Map<String, dynamic> json)
+  UIWidgetType.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'];
 
@@ -58,7 +56,7 @@ class DeviceWidgetType {
       };
 }
 
-class DeviceWidgetConfig {
+class UIWidgetConfig {
   // All
   String dataType;
 
@@ -86,9 +84,9 @@ class DeviceWidgetConfig {
   List<String> lineChartEvents;
 
   // default constructor
-  DeviceWidgetConfig();
+  UIWidgetConfig();
 
-  DeviceWidgetConfig.fromJson(Map<String, dynamic> json)
+  UIWidgetConfig.fromJson(Map<String, dynamic> json)
       : dataType = json['dataType'],
         order = json['order'],
         eventName = json['eventName'],
