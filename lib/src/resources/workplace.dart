@@ -25,8 +25,8 @@ class Workplace {
       : id = json['id'],
         name = json['name'],
         type = json['type'],
-        meta =
-            json['meta'] != null ? WorkplaceMeta.fromJson(json['meta']) : null,
+        // meta =
+            // json['meta'] != null ? WorkplaceMeta.fromJson(json['meta']) : null,
         config = json['config'] != null
             ? WorkplaceConfig.fromJson(json['config'])
             : null,
@@ -64,7 +64,7 @@ class WorkplaceMeta {
   WorkplaceMeta.fromJson(Map<String, dynamic> json)
       : points = json['points'] != null
             ? json['points']
-                .map<Device>((pointsJson) => Vector3.fromJson(pointsJson))
+                .map<Vector3>((pointsJson) => Vector3.fromJson(pointsJson))
                 .toList()
             : null;
 

@@ -5,7 +5,7 @@ class UIWidget {
 
   UIWidgetType type;
 
-  UIWidgetConfig config;
+  Map<String, dynamic> config;
 
   DateTime createdAt;
 
@@ -18,7 +18,7 @@ class UIWidget {
       : id = json['id'],
         name = json['name'],
         type = json['type'] != null ? UIWidgetType.fromJson(json['type']) : null,
-        config = json['config'] != null ? UIWidgetConfig.fromJson(json['config']) : null,
+        config = json['config'],// != null ? UIWidgetConfig.fromJson(json['config']) : null,
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
                 isUtc: true)

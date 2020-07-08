@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
+import 'package:wia_dart_package/src/resources/occupancy.dart';
 
 import './src/resources/access_token.dart';
 import './src/resources/device.dart';
@@ -20,6 +21,7 @@ export './src/resources/device.dart';
 export './src/resources/event.dart';
 export './src/resources/exceptions.dart';
 export './src/resources/kiosk.dart';
+export './src/resources/occupancy.dart';
 export './src/resources/organisation.dart';
 export './src/resources/space.dart';
 export './src/resources/ui_widget.dart';
@@ -155,7 +157,7 @@ class Wia {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
-      print(jsonResponse);
+
       List<dynamic> organisationsData = jsonResponse["organisations"];
       return organisationsData
           .map((organisationJson) => Organisation.fromJson(organisationJson))
@@ -166,15 +168,19 @@ class Wia {
     }
   }
 
-  Future<List<UIWidget>> listDeviceWidgets(String deviceId) async {
-    var queryString = "device.id=" + deviceId.toString();
+  Future<List<UIWidget>> listUIWidgets({String deviceId, kioskId}) async {
+    var queryString;
+
+    if (deviceId != null) queryString = "device.id=$deviceId";
+    else if (kioskId != null) queryString = "kiosk.id=$kioskId";
+    else throw Exception("Either deviceId or kioskId must be supplied.");
 
     var response = await http.get(_baseUri + "/widgets?" + queryString,
         headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
-      print(jsonResponse);
+
       List<dynamic> widgetsData = jsonResponse["widgets"];
       return widgetsData
           .map((widgetJson) => UIWidget.fromJson(widgetJson))
@@ -293,6 +299,29 @@ class Wia {
       var jsonResponse = convert.jsonDecode(response.body);
       var kiosk = Kiosk.fromJson(jsonResponse);
       return kiosk;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+    Future<List<Occupancy>> getLiveOccupancy({String spaceId, workplaceId}) async {
+    var queryString;
+
+    if (spaceId != null) queryString = "space.id=$spaceId";
+    else if (workplaceId != null) queryString = "workplace.id=$workplaceId";
+    else throw Exception("Either spaceId or workplaceId must be supplied.");
+
+    var response = await http.get(_baseUri + "/utilisation/occupancy/live?" + queryString,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+
+      List<dynamic> occupancyData = jsonResponse["results"];
+      return occupancyData
+          .map((occupancyJson) => Occupancy.fromJson(occupancyJson))
+          .toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
