@@ -20,6 +20,10 @@ class Device {
 
   dynamic state;
 
+  DeviceWiFi wifi;
+
+  DeviceBluetooth bluetooth;
+
   DateTime createdAt;
 
   DateTime updatedAt;
@@ -44,6 +48,12 @@ class Device {
                 .toList()
             : null,
         state = json['state'],
+        wifi = json['wifi'] != null
+            ? DeviceWiFi.fromJson(json['wifi'])
+            : null,
+        bluetooth = json['bluetooth'] != null
+            ? DeviceBluetooth.fromJson(json['bluetooth'])
+            : null,
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
                 isUtc: true)
@@ -64,5 +74,39 @@ class Device {
         'state': state,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
+      };
+}
+
+class DeviceWiFi {
+  String macAddress;
+
+  int rssi;
+
+  DeviceWiFi();
+
+  DeviceWiFi.fromJson(Map<String, dynamic> json)
+      : macAddress = json['macAddress'],
+        rssi = json['rssi'];
+
+  Map<String, dynamic> toJson() => {
+        'macAddress': macAddress,
+        'rssi': rssi,
+      };
+}
+
+class DeviceBluetooth {
+  String macAddress;
+
+  int rssi;
+
+  DeviceBluetooth();
+
+  DeviceBluetooth.fromJson(Map<String, dynamic> json)
+      : macAddress = json['macAddress'],
+        rssi = json['rssi'];
+
+  Map<String, dynamic> toJson() => {
+        'macAddress': macAddress,
+        'rssi': rssi,
       };
 }
