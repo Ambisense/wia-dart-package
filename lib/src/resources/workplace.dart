@@ -74,11 +74,16 @@ class WorkplaceMeta {
 }
 
 class WorkplaceConfig {
-  WorkplaceConfig();
+  int capacity;
 
-  WorkplaceConfig.fromJson(Map<String, dynamic> json);
+  WorkplaceConfig(this.capacity);
 
-  Map<String, dynamic> toJson() => {};
+  WorkplaceConfig.fromJson(Map<String, dynamic> json)
+      : capacity = json['capacity'];
+
+  Map<String, dynamic> toJson() => {
+    "capacity": capacity,
+  };
 }
 
 class Vector3 {
