@@ -120,8 +120,9 @@ class Wia {
 
   Future<List<Device>> listDevices(
       {String spaceId, int limit = 40, int page = 1}) async {
-    var response = await http.get(_baseUri + "/devices?space.id=" + spaceId,
-        headers: getClientHeaders());
+    var queryParams = "/devices?space.id=$spaceId&limit=$limit";
+    var response =
+        await http.get(_baseUri + queryParams, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -171,9 +172,12 @@ class Wia {
   Future<List<UIWidget>> listUIWidgets({String deviceId, kioskId}) async {
     var queryString;
 
-    if (deviceId != null) queryString = "device.id=$deviceId";
-    else if (kioskId != null) queryString = "kiosk.id=$kioskId";
-    else throw Exception("Either deviceId or kioskId must be supplied.");
+    if (deviceId != null)
+      queryString = "device.id=$deviceId";
+    else if (kioskId != null)
+      queryString = "kiosk.id=$kioskId";
+    else
+      throw Exception("Either deviceId or kioskId must be supplied.");
 
     var response = await http.get(_baseUri + "/widgets?" + queryString,
         headers: getClientHeaders());
@@ -305,14 +309,19 @@ class Wia {
     }
   }
 
-    Future<List<Occupancy>> getLiveOccupancy({String spaceId, workplaceId}) async {
+  Future<List<Occupancy>> getLiveOccupancy(
+      {String spaceId, workplaceId}) async {
     var queryString;
 
-    if (spaceId != null) queryString = "space.id=$spaceId";
-    else if (workplaceId != null) queryString = "workplace.id=$workplaceId";
-    else throw Exception("Either spaceId or workplaceId must be supplied.");
+    if (spaceId != null)
+      queryString = "space.id=$spaceId";
+    else if (workplaceId != null)
+      queryString = "workplace.id=$workplaceId";
+    else
+      throw Exception("Either spaceId or workplaceId must be supplied.");
 
-    var response = await http.get(_baseUri + "/utilisation/occupancy/live?" + queryString,
+    var response = await http.get(
+        _baseUri + "/utilisation/occupancy/live?" + queryString,
         headers: getClientHeaders());
 
     if (response.statusCode == 200) {
