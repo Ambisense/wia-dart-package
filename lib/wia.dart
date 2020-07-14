@@ -341,9 +341,11 @@ class Wia {
     else
       throw Exception("Either spaceId or workplaceId must be supplied.");
 
-    var response = await http.get(
-        _baseUri + "/utilisation/occupancy/live?" + queryString,
-        headers: getClientHeaders());
+    var url = _baseUri + "/utilisation/occupancy/live";
+    if (_secretKey != null) url = "$url/kiosk";
+    if (queryString != null) url = "$url?$queryString";
+
+    var response = await http.get(url, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
