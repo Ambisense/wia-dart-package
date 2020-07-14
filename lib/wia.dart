@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
+import 'package:wia_dart_package/src/resources/kiosk_api_keys.dart';
 import 'package:wia_dart_package/src/resources/occupancy.dart';
 
 import './src/resources/access_token.dart';
@@ -22,6 +23,7 @@ export './src/resources/device.dart';
 export './src/resources/event.dart';
 export './src/resources/exceptions.dart';
 export './src/resources/kiosk.dart';
+export './src/resources/kiosk_api_keys.dart';
 export './src/resources/occupancy.dart';
 export './src/resources/organisation.dart';
 export './src/resources/space.dart';
@@ -33,12 +35,15 @@ class Wia {
   final _baseUri = "https://api.wia.io/v1";
   String _clientKey = null;
   String _accessToken = null;
-  String _appKey = null;
+  String _secretKey = null; // for use with kiosks
 
-  Wia({@required String clientKey, String accessToken = null, String appKey}) {
+  Wia(
+      {@required String clientKey,
+      String accessToken = null,
+      String secretKey}) {
     _clientKey = clientKey;
     _accessToken = accessToken;
-    _appKey = appKey;
+    _secretKey = secretKey;
   }
 
   Map<String, String> getClientHeaders() {
@@ -48,9 +53,8 @@ class Wia {
     }
     if (_accessToken != null) {
       map['Authorization'] = 'Bearer ' + _accessToken;
-    } else if (_appKey != null) {
-      // TODO: Temporary for testing until API ready
-      map['Authorization'] = 'Bearer ' + _appKey;
+    } else if (_secretKey != null) {
+      map['Authorization'] = 'Bearer ' + _secretKey;
     }
     return map;
   }
@@ -68,7 +72,7 @@ class Wia {
         headers: getClientHeaders());
 
     if (response.statusCode == 200) {
-      clearAppKey();
+      clearSecretKey();
       var jsonResponse = convert.jsonDecode(response.body);
       var accessToken = AccessToken.fromJson(jsonResponse);
       _accessToken = accessToken.token;
@@ -83,8 +87,8 @@ class Wia {
     _accessToken = null;
   }
 
-  void clearAppKey() async {
-    _appKey = null;
+  void clearSecretKey() async {
+    _secretKey = null;
   }
 
   Future<User> retrieveUserMe() async {
@@ -150,8 +154,10 @@ class Wia {
   }
 
   Future<Device> retrieveDevice(String id) async {
-    var response = await http.get(_baseUri + "/devices/" + id,
-        headers: getClientHeaders());
+    var url = _baseUri + "/devices/" + id;
+    if (_secretKey != null) url = "$url/kiosk";
+
+    var response = await http.get(url, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -280,8 +286,10 @@ class Wia {
   }
 
   Future<Workplace> retrieveWorkplace(String id) async {
-    var response = await http.get(_baseUri + "/workplaces/" + id,
-        headers: getClientHeaders());
+    var url = _baseUri + "/workplaces/" + id;
+    if (_secretKey != null) url = "$url/kiosk";
+
+    var response = await http.get(url, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -344,6 +352,34 @@ class Wia {
       return occupancyData
           .map((occupancyJson) => Occupancy.fromJson(occupancyJson))
           .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Kiosk> retrieveKiosksMe() async {
+    var response =
+        await http.get("$_baseUri/kiosks/me", headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var kiosk = Kiosk.fromJson(jsonResponse);
+      return kiosk;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<KioskApiKeys> retrieveKioskApiKeys(String id) async {
+    var response = await http.get("$_baseUri/kiosks/$id/apiKeys",
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var kioskApiKeys = KioskApiKeys.fromJson(jsonResponse);
+      return kioskApiKeys;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);

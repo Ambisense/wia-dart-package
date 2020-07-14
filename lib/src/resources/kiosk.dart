@@ -1,7 +1,13 @@
+import 'package:wia_dart_package/wia.dart';
+
 class Kiosk {
   String id;
 
   String name;
+
+  int slots;
+
+  List<UIWidget> widgets;
 
   DateTime createdAt;
 
@@ -12,6 +18,13 @@ class Kiosk {
   Kiosk.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
+        slots = json['slots'],
+        widgets = json['widgets'] != null
+            ? json['widgets']
+                .map<UIWidget>(
+                    (uiWidgetJson) => UIWidget.fromJson(uiWidgetJson))
+                .toList()
+            : null,
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
                 isUtc: true)
@@ -24,6 +37,8 @@ class Kiosk {
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
+        'slots': slots,
+        'widgets': widgets,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
       };
