@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 import 'package:wia_dart_package/src/resources/occupancy.dart';
 
 import './src/resources/access_token.dart';
@@ -32,10 +33,12 @@ class Wia {
   final _baseUri = "https://api.wia.io/v1";
   String _clientKey = null;
   String _accessToken = null;
+  String _appKey = null;
 
-  Wia({String clientKey = null, String accessToken = null}) {
+  Wia({@required String clientKey, String accessToken = null, String appKey}) {
     _clientKey = clientKey;
     _accessToken = accessToken;
+    _appKey = appKey;
   }
 
   Map<String, String> getClientHeaders() {
@@ -45,12 +48,17 @@ class Wia {
     }
     if (_accessToken != null) {
       map['Authorization'] = 'Bearer ' + _accessToken;
+    } else if (_appKey != null) {
+      // TODO: Temporary for testing until API ready
+      map['Authorization'] = 'Bearer ' + _appKey;
     }
     return map;
   }
 
   Future<AccessToken> login(String username, String password) async {
-    var response = await http.post(_baseUri + "/auth/token",
+    var response;
+
+    response = await http.post(_baseUri + "/auth/token",
         body: {
           'username': username,
           'password': password,
@@ -60,6 +68,7 @@ class Wia {
         headers: getClientHeaders());
 
     if (response.statusCode == 200) {
+      clearAppKey();
       var jsonResponse = convert.jsonDecode(response.body);
       var accessToken = AccessToken.fromJson(jsonResponse);
       _accessToken = accessToken.token;
@@ -72,6 +81,10 @@ class Wia {
 
   void logout() async {
     _accessToken = null;
+  }
+
+  void clearAppKey() async {
+    _appKey = null;
   }
 
   Future<User> retrieveUserMe() async {
