@@ -48,6 +48,13 @@ void main() async {
       print(device.events);
     });
 
+    String eventDeviceId = "dev_eZbhTPZo";
+    String eventName = "testing";
+    String eventData = "12345";
+    Event createEventRequest =
+        await wia.createEvent(eventDeviceId, eventName, eventData);
+    // print(createEventRequest.id);
+
     print("DONE!");
   } catch (err) {
     print(err);

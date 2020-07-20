@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert' as convert;
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:meta/meta.dart';
@@ -56,6 +57,7 @@ class Wia {
     } else if (_secretKey != null) {
       map['Authorization'] = 'Bearer ' + _secretKey;
     }
+
     return map;
   }
 
@@ -208,6 +210,33 @@ class Wia {
       return widgetsData
           .map((widgetJson) => UIWidget.fromJson(widgetJson))
           .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Event> createEvent(String deviceId, String name, dynamic data,
+      {DateTime timestamp}) async {
+    var url = _baseUri + "/events";
+    Map body = {
+      'device': {'id': deviceId},
+      'name': name,
+      'data': data
+    };
+
+    if (timestamp != null) {
+      body['timestamp'] = timestamp.millisecondsSinceEpoch;
+    }
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      return jsonResponse;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
