@@ -9,6 +9,8 @@ class Kiosk {
 
   List<UIWidget> widgets;
 
+  bool gatewayModeEnabled;
+
   DateTime createdAt;
 
   DateTime updatedAt;
@@ -25,6 +27,7 @@ class Kiosk {
                     (uiWidgetJson) => UIWidget.fromJson(uiWidgetJson))
                 .toList()
             : null,
+        gatewayModeEnabled = json['gatewayModeEnabled'],
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
                 isUtc: true)
@@ -38,6 +41,7 @@ class Kiosk {
         'id': id,
         'name': name,
         'slots': slots,
+        'gatewayModeEnabled': gatewayModeEnabled,
         'widgets': widgets,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
