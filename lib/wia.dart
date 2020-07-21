@@ -219,11 +219,7 @@ class Wia {
   Future<Event> createEvent(String deviceId, String name, dynamic data,
       {DateTime timestamp}) async {
     var url = _baseUri + "/events";
-    Map body = {
-      'device': {'id': deviceId},
-      'name': name,
-      'data': data
-    };
+    Map body = {'deviceId': deviceId, 'name': name, 'data': data};
 
     if (timestamp != null) {
       body['timestamp'] = timestamp.millisecondsSinceEpoch;
