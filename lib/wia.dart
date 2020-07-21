@@ -232,7 +232,8 @@ class Wia {
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      return jsonResponse;
+      var event = Event.fromJson(jsonResponse);
+      return event;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
