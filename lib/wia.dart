@@ -17,6 +17,7 @@ import './src/resources/space.dart';
 import './src/resources/ui_widget.dart';
 import './src/resources/user.dart';
 import './src/resources/workplace.dart';
+import './src/resources/notification.dart';
 
 export './src/resources/access_token.dart';
 export './src/resources/avatar.dart';
@@ -31,6 +32,7 @@ export './src/resources/space.dart';
 export './src/resources/ui_widget.dart';
 export './src/resources/user.dart';
 export './src/resources/workplace.dart';
+export './src/resources/notification.dart';
 
 class Wia {
   final _baseUri = "https://api.wia.io/v1";
@@ -408,6 +410,25 @@ class Wia {
       var jsonResponse = convert.jsonDecode(response.body);
       var kioskApiKeys = KioskApiKeys.fromJson(jsonResponse);
       return kioskApiKeys;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Notification>> listDeviceNotifications(String deviceId) async {
+    var queryString = "?device.id=" + deviceId;
+
+    var response = await http.get(_baseUri + "/notifications" + queryString,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+
+      List<dynamic> notificationsData = jsonResponse["notifications"];
+      return notificationsData
+          .map((notificationJson) => Notification.fromJson(notificationJson))
+          .toList();
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);

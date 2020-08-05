@@ -55,6 +55,16 @@ void main() async {
         await wia.createEvent(eventDeviceId, eventName, eventData);
     // print(createEventRequest.id);
 
+    String notificationDeviceId = "dev_eZbhTPZo";
+    List<Notification> listNotificationsRequest =
+        await wia.listDeviceNotifications(notificationDeviceId);
+    listNotificationsRequest.forEach((notification) {
+      print(notification.id);
+      print(notification.title);
+      print(notification.body);
+      print(notification.data);
+    });
+
     print("DONE!");
   } catch (err) {
     print(err);
