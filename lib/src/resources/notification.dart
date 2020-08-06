@@ -5,7 +5,7 @@ class Notification {
 
   String body;
 
-  String data;
+  dynamic data;
 
   DateTime createdAt;
 
