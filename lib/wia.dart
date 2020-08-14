@@ -63,6 +63,18 @@ class Wia {
     return map;
   }
 
+  String getClientKey() {
+    return _clientKey;
+  }
+
+  String getAccessToken() {
+    return _accessToken;
+  }
+
+  String getSecretKey() {
+    return _secretKey;
+  }
+
   Future<AccessToken> login(String username, String password) async {
     var response;
 
