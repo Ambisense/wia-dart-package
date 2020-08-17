@@ -11,6 +11,8 @@ class Kiosk {
 
   bool gatewayModeEnabled;
 
+  bool useRestApiGateway;
+
   DateTime createdAt;
 
   DateTime updatedAt;
@@ -28,6 +30,7 @@ class Kiosk {
                 .toList()
             : null,
         gatewayModeEnabled = json['gatewayModeEnabled'],
+        useRestApiGateway = json['useRestApiGateway'],
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
                 isUtc: true)
@@ -42,6 +45,7 @@ class Kiosk {
         'name': name,
         'slots': slots,
         'gatewayModeEnabled': gatewayModeEnabled,
+        'useRestApiGateway': useRestApiGateway,
         'widgets': widgets,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
