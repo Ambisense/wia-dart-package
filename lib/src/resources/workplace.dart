@@ -11,6 +11,8 @@ class Workplace {
 
   WorkplaceConfig config;
 
+  dynamic state;
+
   List<Device> devices;
 
   String parentWorkplace;
@@ -26,10 +28,11 @@ class Workplace {
         name = json['name'],
         type = json['type'],
         // meta =
-            // json['meta'] != null ? WorkplaceMeta.fromJson(json['meta']) : null,
+        // json['meta'] != null ? WorkplaceMeta.fromJson(json['meta']) : null,
         config = json['config'] != null
             ? WorkplaceConfig.fromJson(json['config'])
             : null,
+        state = json['state'],
         devices = json['devices'] != null
             ? json['devices']
                 .map<Device>((deviceJson) => Device.fromJson(deviceJson))
@@ -51,6 +54,7 @@ class Workplace {
         'type': type,
         'meta': meta,
         'config': config,
+        'state': state,
         'devices': devices,
         'parentWorkplace': parentWorkplace,
         'createdAt': createdAt,
@@ -82,8 +86,8 @@ class WorkplaceConfig {
       : capacity = json['capacity'];
 
   Map<String, dynamic> toJson() => {
-    "capacity": capacity,
-  };
+        "capacity": capacity,
+      };
 }
 
 class Vector3 {
