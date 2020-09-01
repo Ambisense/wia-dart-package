@@ -48,22 +48,26 @@ void main() async {
       print(device.events);
     });
 
-    String eventDeviceId = "dev_eZbhTPZo";
+    String eventDeviceId = "dev_feBvuFLH";
     String eventName = "testing";
     String eventData = "12345";
-    Event createEventRequest =
-        await wia.createEvent(eventDeviceId, eventName, eventData);
+// wia = d_sk_3wjg5BzfKE73Xdkm5sPYJNAU
+
+    // Event createEventRequest =
+    //     await wia.createEvent(eventDeviceId, eventName, eventData);
     // print(createEventRequest.id);
 
-    String notificationDeviceId = "dev_eZbhTPZo";
-    List<Notification> listNotificationsRequest =
-        await wia.listDeviceNotifications(notificationDeviceId);
-    listNotificationsRequest.forEach((notification) {
-      print(notification.id);
-      print(notification.title);
-      print(notification.body);
-      print(notification.data);
-    });
+    // wia.createEventNoResponse(eventDeviceId, eventName, eventData);
+
+    // String notificationDeviceId = "dev_eZbhTPZo";
+    // List<Notification> listNotificationsRequest =
+    //     await wia.listDeviceNotifications(notificationDeviceId);
+    // listNotificationsRequest.forEach((notification) {
+    //   print(notification.id);
+    //   print(notification.title);
+    //   print(notification.body);
+    //   print(notification.data);
+    // });
 
     print("DONE!");
   } catch (err) {

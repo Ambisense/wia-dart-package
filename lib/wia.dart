@@ -254,6 +254,21 @@ class Wia {
     }
   }
 
+  void createEventNoResponse(String deviceId, String name, dynamic data,
+      {DateTime timestamp}) async {
+    var url = _baseUri + "/events";
+    Map body = {'deviceId': deviceId, 'name': name, 'data': data};
+
+    if (timestamp != null) {
+      body['timestamp'] = timestamp.millisecondsSinceEpoch;
+    }
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+
+    http.post(url, body: convert.jsonEncode(body), headers: headers);
+  }
+
   Future<List<Event>> listEvents(
       {String deviceId = null, String name = null}) async {
     var queryString = "?device.id=" + deviceId;
