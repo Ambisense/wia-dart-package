@@ -266,7 +266,14 @@ class Wia {
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
 
-    http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var postBody;
+    try {
+      postBody = convert.jsonEncode(body);
+    } catch (err) {
+      postBody = body.toString();
+    }
+
+    http.post(url, body: postBody, headers: headers);
   }
 
   Future<List<Event>> listEvents(
