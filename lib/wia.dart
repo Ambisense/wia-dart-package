@@ -204,15 +204,19 @@ class Wia {
     }
   }
 
-  Future<List<UIWidget>> listUIWidgets({String deviceId, kioskId}) async {
+  Future<List<UIWidget>> listUIWidgets(
+      {String deviceId, kioskId, productId}) async {
     var queryString;
 
     if (deviceId != null)
       queryString = "device.id=$deviceId";
     else if (kioskId != null)
       queryString = "kiosk.id=$kioskId";
+    else if (productId != null)
+      queryString = "product.id=$productId";
     else
-      throw Exception("Either deviceId or kioskId must be supplied.");
+      throw Exception(
+          "Either deviceId, kioskId or productId must be supplied.");
 
     var response = await http.get(_baseUri + "/widgets?" + queryString,
         headers: getClientHeaders());

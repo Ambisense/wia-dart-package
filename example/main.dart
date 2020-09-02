@@ -51,13 +51,14 @@ void main() async {
     String eventDeviceId = "dev_feBvuFLH";
     String eventName = "testing";
     String eventData = "12345";
-// wia = d_sk_3wjg5BzfKE73Xdkm5sPYJNAU
+    // wia = d_sk_3wjg5BzfKE73Xdkm5sPYJNAU
+    wia = new Wia(accessToken: "d_sk_3wjg5BzfKE73Xdkm5sPYJNAU");
 
     // Event createEventRequest =
     //     await wia.createEvent(eventDeviceId, eventName, eventData);
     // print(createEventRequest.id);
 
-    // wia.createEventNoResponse(eventDeviceId, eventName, eventData);
+    wia.createEventNoResponse(eventDeviceId, eventName, eventData);
 
     // String notificationDeviceId = "dev_eZbhTPZo";
     // List<Notification> listNotificationsRequest =
