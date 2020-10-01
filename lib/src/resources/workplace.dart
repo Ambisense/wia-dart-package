@@ -100,25 +100,16 @@ class WorkplaceOccupancy {
   int current;
   int flowIn;
   int flowOut;
-  DateTime timestamp;
 
   WorkplaceOccupancy();
 
   WorkplaceOccupancy.fromJson(Map<String, dynamic> json)
       : current = json['current'],
         flowIn = json['in'],
-        flowOut = json['out'],
-        timestamp = json['timestamp'] != null
-            ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'],
-                isUtc: true)
-            : null;
+        flowOut = json['out'];
 
-  Map<String, dynamic> toJson() => {
-        "current": current,
-        "in": flowIn,
-        "out": flowOut,
-        "timestamp": timestamp,
-      };
+  Map<String, dynamic> toJson() =>
+      {"current": current, "in": flowIn, "out": flowOut};
 }
 
 class Vector3 {
