@@ -13,6 +13,8 @@ class Workplace {
 
   dynamic state;
 
+  WorkplaceOccupancy occupancy;
+
   List<Device> devices;
 
   String parentWorkplace;
@@ -33,6 +35,7 @@ class Workplace {
             ? WorkplaceConfig.fromJson(json['config'])
             : null,
         state = json['state'],
+        occupancy = json['occupancy'],
         devices = json['devices'] != null
             ? json['devices']
                 .map<Device>((deviceJson) => Device.fromJson(deviceJson))
@@ -55,6 +58,7 @@ class Workplace {
         'meta': meta,
         'config': config,
         'state': state,
+        'occupancy': occupancy,
         'devices': devices,
         'parentWorkplace': parentWorkplace,
         'createdAt': createdAt,
@@ -87,6 +91,31 @@ class WorkplaceConfig {
 
   Map<String, dynamic> toJson() => {
         "capacity": capacity,
+      };
+}
+
+class WorkplaceOccupancy {
+  int current;
+  int flowIn;
+  int flowOut;
+  DateTime timestamp;
+
+  WorkplaceOccupancy();
+
+  WorkplaceOccupancy.fromJson(Map<String, dynamic> json)
+      : current = json['current'],
+        flowIn = json['in'],
+        flowOut = json['out'],
+        timestamp = json['timestamp'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(json['timestamp'],
+                isUtc: true)
+            : null;
+
+  Map<String, dynamic> toJson() => {
+        "current": current,
+        "in": flowIn,
+        "out": flowOut,
+        "timestamp": timestamp,
       };
 }
 
