@@ -35,7 +35,9 @@ class Workplace {
             ? WorkplaceConfig.fromJson(json['config'])
             : null,
         state = json['state'],
-        occupancy = json['occupancy'],
+        occupancy = json['occupancy'] != null
+            ? WorkplaceOccupancy.fromJson(json['occupancy'])
+            : null,
         devices = json['devices'] != null
             ? json['devices']
                 .map<Device>((deviceJson) => Device.fromJson(deviceJson))
