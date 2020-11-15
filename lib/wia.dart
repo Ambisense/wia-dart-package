@@ -185,13 +185,12 @@ class Wia {
     }
   }
 
-  Future<Event> claimDevice(
+  Future<dynamic> claimDevice(
       String spaceId, String deviceId, String macAddress) async {
     var url = _baseUri + "/devices/claim";
     Map body = {
-      'space.id': spaceId,
-      'device.id': deviceId,
-      'device.bluetoothMacAddress': macAddress,
+      'space': {"id": spaceId},
+      'device.': {"id": deviceId, "bluetoothMacAddress": macAddress}
     };
 
     var headers = getClientHeaders();
@@ -201,15 +200,14 @@ class Wia {
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      var event = Event.fromJson(jsonResponse);
-      return event;
+      return jsonResponse;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
     }
   }
 
-  Future<Event> releaseDevice(String deviceId) async {
+  Future<dynamic> releaseDevice(String deviceId) async {
     var url = _baseUri + "/devices/${deviceId}/release";
     Map body = {};
 
@@ -220,8 +218,7 @@ class Wia {
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      var event = Event.fromJson(jsonResponse);
-      return event;
+      return jsonResponse;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
