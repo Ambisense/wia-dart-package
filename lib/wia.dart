@@ -185,6 +185,49 @@ class Wia {
     }
   }
 
+  Future<Event> claimDevice(
+      String spaceId, String deviceId, String macAddress) async {
+    var url = _baseUri + "/devices/claim";
+    Map body = {
+      'space.id': spaceId,
+      'device.id': deviceId,
+      'device.bluetoothMacAddress': macAddress,
+    };
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var event = Event.fromJson(jsonResponse);
+      return event;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Event> releaseDevice(String deviceId) async {
+    var url = _baseUri + "/devices/${deviceId}/release";
+    Map body = {};
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var event = Event.fromJson(jsonResponse);
+      return event;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
   Future<List<Organisation>> listOrganisations({int limit = 80}) async {
     var queryString = "limit=" + limit.toString();
 
