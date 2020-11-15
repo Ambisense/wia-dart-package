@@ -11,6 +11,7 @@ import './src/resources/access_token.dart';
 import './src/resources/device.dart';
 import './src/resources/event.dart';
 import './src/resources/exceptions.dart';
+import './src/resources/floor.dart';
 import './src/resources/kiosk.dart';
 import './src/resources/organisation.dart';
 import './src/resources/space.dart';
@@ -24,6 +25,7 @@ export './src/resources/avatar.dart';
 export './src/resources/device.dart';
 export './src/resources/event.dart';
 export './src/resources/exceptions.dart';
+export './src/resources/floor.dart';
 export './src/resources/kiosk.dart';
 export './src/resources/kiosk_api_keys.dart';
 export './src/resources/occupancy.dart';
@@ -507,6 +509,89 @@ class Wia {
       return notificationsData
           .map((notificationJson) => Notification.fromJson(notificationJson))
           .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Floor> createFloor(String spaceId, String name) async {
+    var url = _baseUri + "/floors";
+    Map body = {'spaceId': spaceId, 'name': name};
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var floor = Floor.fromJson(jsonResponse);
+      return floor;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Floor>> listFloors(
+      {String spaceId, int limit = 40, int page = 1}) async {
+    var response = await http.get(_baseUri + "/floors?space.id=" + spaceId,
+        headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      List<dynamic> workplacesData = jsonResponse["floors"];
+      return workplacesData
+          .map((workplaceJson) => Floor.fromJson(workplaceJson))
+          .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Floor> retrieveFloor(String id) async {
+    var url = _baseUri + "/floors/" + id;
+    var response = await http.get(url, headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var floor = Floor.fromJson(jsonResponse);
+      return floor;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Floor> updateFloor(String id, String name) async {
+    var url = _baseUri + "/floors/${id}";
+    Map body = {'name': name};
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var floor = Floor.fromJson(jsonResponse);
+      return floor;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<Floor> deleteFloor(String id) async {
+    var url = _baseUri + "/floors/" + id;
+    var response = await http.delete(url, headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var floor = Floor.fromJson(jsonResponse);
+      return floor;
     } else {
       var jsonResponse = convert.jsonDecode(response.body);
       throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
