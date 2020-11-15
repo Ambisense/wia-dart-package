@@ -376,6 +376,31 @@ class Wia {
     }
   }
 
+  Future<Workplace> createWorkplace(
+      String spaceId, String floorId, String name, String type) async {
+    var url = _baseUri + "/workplaces";
+    Map body = {
+      'spaceId': spaceId,
+      'floorId': floorId,
+      'name': name,
+      'type': type
+    };
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var workplace = Workplace.fromJson(jsonResponse);
+      return workplace;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
   Future<List<Workplace>> listWorkplaces(
       {String spaceId, int limit = 40, int page = 1}) async {
     var response = await http.get(_baseUri + "/workplaces?space.id=" + spaceId,
