@@ -434,6 +434,61 @@ class Wia {
     }
   }
 
+  Future<Device> addDeviceToPlace(String placeId, String deviceId) async {
+    var url = _baseUri + "/workplaces/${placeId}/devices";
+    Map body = {
+      'device': {'id': deviceId}
+    };
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var device = Device.fromJson(jsonResponse);
+      return device;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<dynamic> removeDeviceToPlace(String placeId, String deviceId) async {
+    var url = _baseUri + "/workplaces/${placeId}/devices/${deviceId}";
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response = await http.delete(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      return jsonResponse;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
+  Future<List<Device>> listPlaceDevices(
+      {String placeId, int limit = 40, int page = 1}) async {
+    var queryParams = "/workplaces/${placeId}/devices?limit=$limit";
+    var response =
+        await http.get(_baseUri + queryParams, headers: getClientHeaders());
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
+      List<dynamic> devicesData = jsonResponse["devices"];
+      return devicesData
+          .map((deviceJson) => Device.fromJson(deviceJson))
+          .toList();
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
   Future<List<Kiosk>> listKiosks(String spaceId,
       {int limit = 40, int page = 1}) async {
     var response = await http.get(_baseUri + "/kiosks?space.id=" + spaceId,
