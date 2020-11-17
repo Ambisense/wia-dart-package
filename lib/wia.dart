@@ -474,11 +474,15 @@ class Wia {
   }
 
   Future<dynamic> removeDeviceFromPlace(String placeId, String deviceId) async {
-    var url = _baseUri + "/workplaces/${placeId}/devices/${deviceId}";
+    var url = _baseUri + "/workplaces/${placeId}/devices/${deviceId}/remove";
+    Map body = {
+      'device': {'id': deviceId}
+    };
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response = await http.delete(url, headers: headers);
+    var response =
+        await http.post(url, body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
