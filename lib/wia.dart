@@ -187,6 +187,24 @@ class Wia {
     }
   }
 
+  Future<Device> updateDevice(String deviceId, Map fields) async {
+    var url = _baseUri + "/devices/${deviceId}";
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response = await http.post(url,
+        body: convert.jsonEncode(fields), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var device = Device.fromJson(jsonResponse);
+      return device;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
   Future<dynamic> claimDevice(
       String spaceId, String deviceId, String macAddress) async {
     var url = _baseUri + "/devices/claim";
@@ -455,7 +473,7 @@ class Wia {
     }
   }
 
-  Future<dynamic> removeDeviceToPlace(String placeId, String deviceId) async {
+  Future<dynamic> removeDeviceFromPlace(String placeId, String deviceId) async {
     var url = _baseUri + "/workplaces/${placeId}/devices/${deviceId}";
 
     var headers = getClientHeaders();
