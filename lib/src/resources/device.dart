@@ -1,3 +1,5 @@
+import 'package:wia_dart_package/wia.dart';
+
 import './device_type.dart';
 import './event.dart';
 import './location.dart';
@@ -24,6 +26,8 @@ class Device {
 
   DeviceBluetooth bluetooth;
 
+  Workplace workplace;
+
   DateTime createdAt;
 
   DateTime updatedAt;
@@ -48,11 +52,12 @@ class Device {
                 .toList()
             : null,
         state = json['state'],
-        wifi = json['wifi'] != null
-            ? DeviceWiFi.fromJson(json['wifi'])
-            : null,
+        wifi = json['wifi'] != null ? DeviceWiFi.fromJson(json['wifi']) : null,
         bluetooth = json['bluetooth'] != null
             ? DeviceBluetooth.fromJson(json['bluetooth'])
+            : null,
+        workplace = json['workplace'] != null
+            ? Workplace.fromJson(json['workplace'])
             : null,
         createdAt = json['createdAt'] != null
             ? DateTime.fromMillisecondsSinceEpoch(json['createdAt'],
@@ -72,6 +77,9 @@ class Device {
         'location': location,
         'events': events,
         'state': state,
+        'wifi': wifi,
+        'bluetooth': bluetooth,
+        'workplace': workplace,
         'createdAt': createdAt,
         'updatedAt': updatedAt,
       };
