@@ -1,4 +1,5 @@
 import 'package:wia_dart_package/src/resources/device.dart';
+import 'package:wia_dart_package/src/resources/floor.dart';
 
 class Workplace {
   String id;
@@ -6,6 +7,8 @@ class Workplace {
   String name;
 
   String type;
+
+  Floor floor;
 
   WorkplaceMeta meta;
 
@@ -31,6 +34,7 @@ class Workplace {
         type = json['type'],
         // meta =
         // json['meta'] != null ? WorkplaceMeta.fromJson(json['meta']) : null,
+        floor = json['floor'] != null ? Floor.fromJson(json['floor']) : null,
         config = json['config'] != null
             ? WorkplaceConfig.fromJson(json['config'])
             : null,
@@ -58,6 +62,7 @@ class Workplace {
         'name': name,
         'type': type,
         'meta': meta,
+        'floor': floor,
         'config': config,
         'state': state,
         'occupancy': occupancy,
