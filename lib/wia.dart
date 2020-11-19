@@ -452,6 +452,22 @@ class Wia {
     }
   }
 
+  Future<dynamic> deleteWorkplace(String placeId) async {
+    var url = _baseUri + "/workplaces/${placeId}";
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response = await http.delete(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      return jsonResponse;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
   Future<Device> addDeviceToPlace(String placeId, String deviceId) async {
     var url = _baseUri + "/workplaces/${placeId}/devices";
     Map body = {
