@@ -210,7 +210,7 @@ class Wia {
     var url = _baseUri + "/devices/claim";
     Map body = {
       'space': {"id": spaceId},
-      'device.': {"id": deviceId, "bluetoothMacAddress": macAddress}
+      'device': {"id": deviceId, "bluetoothMacAddress": macAddress}
     };
 
     var headers = getClientHeaders();
