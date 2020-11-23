@@ -713,7 +713,7 @@ class Wia {
   }
 
   Future<dynamic> registerNotificationDevice(String token, String type) async {
-    var url = _baseUri + "notifications/register";
+    var url = _baseUri + "/notifications/register";
     Map body = {'token': token, 'type': type};
 
     var headers = getClientHeaders();
