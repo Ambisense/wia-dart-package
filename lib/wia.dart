@@ -419,6 +419,36 @@ class Wia {
     }
   }
 
+  Future<Workplace> updateWorkplaceOccupancy(String placeId, int currentCount,
+      {int inCount, int outCount}) async {
+    var url = _baseUri + "/workplaces/$placeId";
+    Map body = {
+      "occupancy": {"current": currentCount}
+    };
+
+    if (inCount != null) {
+      body["occupancy"]["in"] = inCount;
+    }
+
+    if (outCount != null) {
+      body["occupancy"]["out"] = outCount;
+    }
+
+    var headers = getClientHeaders();
+    headers['Content-Type'] = 'application/json';
+    var response =
+        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      var workplace = Workplace.fromJson(jsonResponse);
+      return workplace;
+    } else {
+      var jsonResponse = convert.jsonDecode(response.body);
+      throw new WiaHttpException(response.statusCode, jsonResponse["message"]);
+    }
+  }
+
   Future<List<Workplace>> listWorkplaces(
       {String spaceId, int limit = 40, int page = 1}) async {
     var response = await http.get(_baseUri + "/workplaces?space.id=" + spaceId,
