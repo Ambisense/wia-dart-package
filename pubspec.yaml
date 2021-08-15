@@ -1,5 +1,5 @@
 name: wia_dart_package
-version: 0.1.0
+version: 0.1.1
 description: A Dart package for interfacing with Wia's APIs
 author: Conall Laverty <conall@wia.io>
 homepage: https://github.com/thatisuday/sample_remote_data
@@ -7,4 +7,4 @@ repository: https://github.com/thatisuday/sample_remote_data.git
 environment:
   sdk: '>=2.5.0 <3.0.0'
 dependencies:
-  http: ^0.12.0+2
+  http: ^0.13.3

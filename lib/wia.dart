@@ -80,7 +80,8 @@ class Wia {
   Future<AccessToken> login(String username, String password) async {
     var response;
 
-    response = await http.post(_baseUri + "/auth/token",
+    var urlParsed = Uri.parse(_baseUri + "/auth/token");
+    response = await http.post(urlParsed,
         body: {
           'username': username,
           'password': password,
@@ -110,8 +111,8 @@ class Wia {
   }
 
   Future<User> retrieveUserMe() async {
-    var response =
-        await http.get(_baseUri + "/users/me", headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/users/me");
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -126,8 +127,8 @@ class Wia {
   Future<List<Space>> listSpaces({int limit = 80}) async {
     var queryString = "limit=" + limit.toString();
 
-    var response = await http.get(_baseUri + "/spaces?" + queryString,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/spaces?" + queryString);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -140,8 +141,8 @@ class Wia {
   }
 
   Future<Space> retrieveSpace(String id) async {
-    var response =
-        await http.get(_baseUri + "/spaces/" + id, headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/spaces/" + id);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -156,8 +157,8 @@ class Wia {
   Future<List<Device>> listDevices(
       {String spaceId, int limit = 40, int page = 1}) async {
     var queryParams = "/devices?space.id=$spaceId&limit=$limit";
-    var response =
-        await http.get(_baseUri + queryParams, headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + queryParams);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -175,7 +176,8 @@ class Wia {
     var url = _baseUri + "/devices/" + id;
     if (_secretKey != null) url = "$url/kiosk";
 
-    var response = await http.get(url, headers: getClientHeaders());
+    var urlParsed = Uri.parse(url);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -192,7 +194,8 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response = await http.post(url,
+    var urlParsed = Uri.parse(url);
+    var response = await http.post(urlParsed,
         body: convert.jsonEncode(fields), headers: headers);
 
     if (response.statusCode == 200) {
@@ -215,8 +218,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.post(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -233,8 +237,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.put(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -248,8 +253,8 @@ class Wia {
   Future<List<Organisation>> listOrganisations({int limit = 80}) async {
     var queryString = "limit=" + limit.toString();
 
-    var response = await http.get(_baseUri + "/organisations?" + queryString,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/organisations?" + queryString);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -278,8 +283,8 @@ class Wia {
       throw Exception(
           "Either deviceId, kioskId or productId must be supplied.");
 
-    var response = await http.get(_baseUri + "/widgets?" + queryString,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/widgets?" + queryString);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -305,8 +310,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.post(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -337,7 +343,8 @@ class Wia {
       postBody = body.toString();
     }
 
-    http.post(url, body: postBody, headers: headers);
+    var urlParsed = Uri.parse(url);
+    http.post(urlParsed, body: postBody, headers: headers);
   }
 
   Future<List<Event>> listEvents(
@@ -348,8 +355,8 @@ class Wia {
       queryString += "&name=" + name;
     }
 
-    var response = await http.get(_baseUri + "/events" + queryString,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/events" + queryString);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -378,8 +385,8 @@ class Wia {
     if (limit != null) queryString += "&limit=$limit";
     if (page != null) queryString += "&page=$page";
 
-    var response = await http.get(_baseUri + "/events" + queryString,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/events" + queryString);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -406,8 +413,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.post(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -436,8 +444,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.put(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -451,8 +460,8 @@ class Wia {
 
   Future<List<Workplace>> listWorkplaces(
       {String spaceId, int limit = 40, int page = 1}) async {
-    var response = await http.get(_baseUri + "/workplaces?space.id=" + spaceId,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/workplaces?space.id=" + spaceId);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -469,8 +478,8 @@ class Wia {
   Future<Workplace> retrieveWorkplace(String id) async {
     var url = _baseUri + "/workplaces/" + id;
     if (_secretKey != null) url = "$url/kiosk";
-
-    var response = await http.get(url, headers: getClientHeaders());
+    var urlParsed = Uri.parse(url);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -487,7 +496,8 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response = await http.delete(url, headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.delete(urlParsed, headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -506,8 +516,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.post(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -524,7 +535,8 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response = await http.delete(url, headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.delete(urlParsed, headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -538,8 +550,9 @@ class Wia {
   Future<List<Device>> listPlaceDevices(
       {String placeId, int limit = 40, int page = 1}) async {
     var queryParams = "/workplaces/${placeId}/devices?limit=$limit";
-    var response =
-        await http.get(_baseUri + queryParams, headers: getClientHeaders());
+
+    var urlParsed = Uri.parse(_baseUri + queryParams);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -555,8 +568,8 @@ class Wia {
 
   Future<List<Kiosk>> listKiosks(String spaceId,
       {int limit = 40, int page = 1}) async {
-    var response = await http.get(_baseUri + "/kiosks?space.id=" + spaceId,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/kiosks?space.id=" + spaceId);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -569,8 +582,8 @@ class Wia {
   }
 
   Future<Kiosk> retrieveKiosk(String id) async {
-    var response =
-        await http.get(_baseUri + "/kiosks/" + id, headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/kiosks/" + id);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -596,8 +609,8 @@ class Wia {
     var url = _baseUri + "/utilisation/occupancy/live";
     if (_secretKey != null) url = "$url/kiosk";
     if (queryString != null) url = "$url?$queryString";
-
-    var response = await http.get(url, headers: getClientHeaders());
+    var urlParsed = Uri.parse(url);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -613,8 +626,8 @@ class Wia {
   }
 
   Future<Kiosk> retrieveKiosksMe() async {
-    var response =
-        await http.get("$_baseUri/kiosks/me", headers: getClientHeaders());
+    var urlParsed = Uri.parse("$_baseUri/kiosks/me");
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -627,8 +640,8 @@ class Wia {
   }
 
   Future<KioskApiKeys> retrieveKioskApiKeys(String id) async {
-    var response = await http.get("$_baseUri/kiosks/$id/apiKeys",
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse("$_baseUri/kiosks/$id/apiKeys");
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -643,8 +656,8 @@ class Wia {
   Future<List<Notification>> listDeviceNotifications(String deviceId) async {
     var queryString = "?device.id=" + deviceId;
 
-    var response = await http.get(_baseUri + "/notifications" + queryString,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/notifications" + queryString);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -665,8 +678,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.post(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -680,8 +694,8 @@ class Wia {
 
   Future<List<Floor>> listFloors(
       {String spaceId, int limit = 40, int page = 1}) async {
-    var response = await http.get(_baseUri + "/floors?space.id=" + spaceId,
-        headers: getClientHeaders());
+    var urlParsed = Uri.parse(_baseUri + "/floors?space.id=" + spaceId);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = convert.jsonDecode(response.body);
@@ -697,7 +711,8 @@ class Wia {
 
   Future<Floor> retrieveFloor(String id) async {
     var url = _baseUri + "/floors/" + id;
-    var response = await http.get(url, headers: getClientHeaders());
+    var urlParsed = Uri.parse(url);
+    var response = await http.get(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -715,8 +730,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.put(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.put(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -730,7 +746,8 @@ class Wia {
 
   Future<Floor> deleteFloor(String id) async {
     var url = _baseUri + "/floors/" + id;
-    var response = await http.delete(url, headers: getClientHeaders());
+    var urlParsed = Uri.parse(url);
+    var response = await http.delete(urlParsed, headers: getClientHeaders());
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
@@ -748,8 +765,9 @@ class Wia {
 
     var headers = getClientHeaders();
     headers['Content-Type'] = 'application/json';
-    var response =
-        await http.post(url, body: convert.jsonEncode(body), headers: headers);
+    var urlParsed = Uri.parse(url);
+    var response = await http.post(urlParsed,
+        body: convert.jsonEncode(body), headers: headers);
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
